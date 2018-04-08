@@ -1,28 +1,54 @@
 .App {
+  background-color: #222;
   text-align: center;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+  height: 100vh;
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
+  padding: 10px;
   color: white;
 }
 
 .App-title {
   font-size: 1.5em;
+  font-weight: 100;
+  margin: 0;
+  padding: 0;
 }
 
-.App-intro {
-  font-size: large;
+.Photo {
+  max-width: 80%;
+  max-height: 50vh;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.Histogram {
+  border: 1px solid white;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  height: 30vh;
+}
+
+.Histogram-channel {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.Histogram-channel > ul {
+  list-style: none;
+  padding: 0;
+}
+
+.Histogram-channel ul li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.Histogram-channel ul li:last-child {
+  margin-right: 0;
+}
+
+.Histogram-channel ul li a {
+  text-decoration: none;
+  color: #eee;
 }
