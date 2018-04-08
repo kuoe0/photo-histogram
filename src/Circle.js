@@ -21,13 +21,13 @@ class Circle extends Component {
 
     return (
       <div className="Circle-button">
-        <ul class="umbrella">
-          <li class="wheel clipped-color"></li>
-          <li class="wheel clipped-color"></li>
-          <li class="wheel clipped-color"></li>
-          <li class="wheel clipped-color"></li>
-          <li class="wheel clipped-color"></li>
-          <li class="wheel clipped-color"></li>
+        <ul className="umbrella">
+          <li className="wheel clipped-color"></li>
+          <li className="wheel clipped-color"></li>
+          <li className="wheel clipped-color"></li>
+          <li className="wheel clipped-color"></li>
+          <li className="wheel clipped-color"></li>
+          <li className="wheel clipped-color"></li>
         </ul>
       </div>
     )

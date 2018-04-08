@@ -20,11 +20,11 @@ class App extends Component {
             </div>
             <div className="Histogram-channel">
               <ul>
-                <li><Circle color="all"   id="btn-all"></Circle></li>
-                <li><Circle color="#ddd"  id="btn-grayscale"></Circle></li>
-                <li><Circle color="red"   id="btn-red"></Circle></li>
-                <li><Circle color="green" id="btn-green"></Circle></li>
-                <li><Circle color="blue"  id="btn-blue"></Circle></li>
+                <li><Circle color="all"        id="btn-all"></Circle></li>
+                <li><Circle color="#ddd"       id="btn-grayscale"></Circle></li>
+                <li><Circle color="tomato"     id="btn-red"></Circle></li>
+                <li><Circle color="limegreen"  id="btn-green"></Circle></li>
+                <li><Circle color="dodgerblue" id="btn-blue"></Circle></li>
               </ul>
             </div>
           </div>
