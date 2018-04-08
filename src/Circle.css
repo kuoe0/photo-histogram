@@ -1,7 +1,66 @@
+:root {
+  --circle-size: 50px;
+}
+
 .Circle-button {
-  display: block;
-  height: 50px;
-  width: 50px;
+  overflow: hidden;
+  position: relative;
+  height: var(--circle-size);
+  width: var(--circle-size);
+  border-radius: 50%;
+}
+
+.wheel, .wheel::after {
+  content: "";
+  height: var(--circle-size);
+  width: var(--circle-size);
   border-radius: 50%;
   border: none;
+  position: absolute;
+  left: 0;
+}
+
+.umbrella {
+  filter: blur(5px);
+}
+
+.clipped-color, .clipped-color:nth-child(n+4):after {
+  clip: rect(0, var(--circle-size), var(--circle-size), calc(var(--circle-size) / 2));
+}
+
+.clipped-color:after, .clipped-color:nth-child(n+4) {
+  clip: rect(0, calc(var(--circle-size) / 2), var(--circle-size), 0);
+}
+
+.clipped-color:nth-child(1)::after {
+  background: tomato;
+  transform: rotate(60deg);
+  z-index: 6;
+}
+
+.clipped-color:nth-child(2)::after {
+  background: gold;
+  transform: rotate(120deg);
+  z-index: 5;
+}
+
+.clipped-color:nth-child(3)::after {
+  background: limegreen;
+  transform: rotate(180deg);
+  z-index: 4;
+}
+
+.clipped-color:nth-child(4)::after {
+  background: turquoise;
+  transform: rotate(180deg);
+}
+
+.clipped-color:nth-child(5)::after {
+  background: dodgerblue;
+  transform: rotate(240deg);
+}
+
+.clipped-color:nth-child(6)::after {
+  background: hotpink;
+  transform: rotate(300deg);
 }

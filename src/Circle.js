@@ -10,14 +10,27 @@ class Circle extends Component {
   render() {
     var style = {};
     if (this.props.color !== 'all') {
-      // conic-gradient
-      style.background = "black";
-    } else {
-      style.background = this.props.color;
+      return (
+        <div className="Circle-button">
+          <div className="wheel" style={{ background: this.props.color }}></div>
+        </div>
+      );
     }
+
+    // conic-gradient
+
     return (
-      <div className="Circle-button" style={style}></div>
-    );
+      <div className="Circle-button">
+        <ul class="umbrella">
+          <li class="wheel clipped-color"></li>
+          <li class="wheel clipped-color"></li>
+          <li class="wheel clipped-color"></li>
+          <li class="wheel clipped-color"></li>
+          <li class="wheel clipped-color"></li>
+          <li class="wheel clipped-color"></li>
+        </ul>
+      </div>
+    )
   }
 }
 
