@@ -47,8 +47,3 @@
 .Histogram-channel ul li:last-child {
   margin-right: 0;
 }
-
-.Histogram-channel ul li a {
-  text-decoration: none;
-  color: #eee;
-}

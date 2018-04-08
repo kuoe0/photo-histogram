@@ -1,0 +1,7 @@
+.Circle-button {
+  display: block;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  border: none;
+}

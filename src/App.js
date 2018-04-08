@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import Circle from './Circle.js';
 import demoImg from './resources/demo.jpg';
+
 import './App.css';
 
 class App extends Component {
@@ -18,11 +20,11 @@ class App extends Component {
             </div>
             <div className="Histogram-channel">
               <ul>
-                <li><a href="#">all</a></li>
-                <li><a href="#">grayscale</a></li>
-                <li><a href="#">red</a></li>
-                <li><a href="#">green</a></li>
-                <li><a href="#">blue</a></li>
+                <li><Circle color="all"   id="btn-all"></Circle></li>
+                <li><Circle color="#ddd"  id="btn-grayscale"></Circle></li>
+                <li><Circle color="red"   id="btn-red"></Circle></li>
+                <li><Circle color="green" id="btn-green"></Circle></li>
+                <li><Circle color="blue"  id="btn-blue"></Circle></li>
               </ul>
             </div>
           </div>
