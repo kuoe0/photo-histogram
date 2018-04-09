@@ -1,10 +1,20 @@
 import React, { Component } from 'react';
 import Circle from './Circle.js';
+import Histogram from './Histogram.js'
 import demoImg from './resources/demo.jpg';
 
 import './App.css';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {isLoaded: false};
+  }
+
+  handelImageLoaded() {
+    this.setState({isLoaded: true});
+  }
+
   render() {
     return (
       <div className="App">
@@ -13,10 +23,14 @@ class App extends Component {
         </header>
         <div>
           <div className="Photo-block">
-            <img className="Photo" src={demoImg} />
+            <img id="photo" 
+             src={demoImg} 
+             onLoad={() => this.handelImageLoaded()}
+             />
           </div>
           <div className="Histogram-block">
-            <div className="Histogram">
+            <div id="histogram-chart">
+              <Histogram isLoaded={this.state.isLoaded} />
             </div>
             <div className="Histogram-channel">
               <ul>
