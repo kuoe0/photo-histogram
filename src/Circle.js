@@ -5,14 +5,22 @@ import './Circle.css';
 class Circle extends Component {
   constructor(props) {
     super(props);
+    this.color = {
+      grayscale: "rgba(221, 221, 221, 1)",
+      red: "rgba(255, 99, 71, 1)",
+      green: "rgba(50, 205, 50, 1)",
+      blue: "rgba(30, 144, 255, 1)"
+    };
     this.state = {color: this.props.color};
   }
 
   render() {
-    if (this.props.color !== 'all') {
+    if (this.props.channel !== 'all') {
       return (
         <div className="Circle-button">
-          <div className="wheel" onClick={this.props.onClick} style={{ background: this.props.color }}></div>
+          <div className="wheel" 
+               onClick={this.props.onClick}
+               style={{ background: this.color[this.props.channel] }}></div>
         </div>
       );
     }

@@ -19,7 +19,8 @@ class App extends Component {
     this.setState({isLoaded: true});
   }
 
-  switchChannel(channel, event) {
+  switchChannel(channel) {
+    console.log("[log] switch to channel " + channel);
     this.setState({channel: channel})
   }
 
@@ -58,11 +59,11 @@ class App extends Component {
             </div>
             <div className="Histogram-channel">
               <ul>
-                <li><Circle onClick={this.switchChannel.bind(this, "all")} color="all"></Circle></li>
-                <li><Circle onClick={this.switchChannel.bind(this, "grayscale")} color="#ddd"></Circle></li>
-                <li><Circle onClick={this.switchChannel.bind(this, "red")} color="tomato"></Circle></li>
-                <li><Circle onClick={this.switchChannel.bind(this, "green")} color="limegreen"></Circle></li>
-                <li><Circle onClick={this.switchChannel.bind(this, "blue")} color="dodgerblue"></Circle></li>
+                <li><Circle onClick={() => this.switchChannel("all")} channel="all"></Circle></li>
+                <li><Circle onClick={() => this.switchChannel("grayscale")} channel="grayscale"></Circle></li>
+                <li><Circle onClick={() => this.switchChannel("red")} channel="red"></Circle></li>
+                <li><Circle onClick={() => this.switchChannel("green")} channel="green"></Circle></li>
+                <li><Circle onClick={() => this.switchChannel("blue")} channel="blue"></Circle></li>
               </ul>
             </div>
           </div>
