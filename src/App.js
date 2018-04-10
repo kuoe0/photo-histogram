@@ -8,11 +8,16 @@ import './App.css';
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {isLoaded: false};
+    this.state = {isLoaded: false,
+                  channel: "grayscale"};
   }
 
   handelImageLoaded() {
     this.setState({isLoaded: true});
+  }
+
+  switchChannel(channel, event) {
+    this.setState({channel: channel})
   }
 
   render() {
@@ -30,15 +35,15 @@ class App extends Component {
           </div>
           <div className="Histogram-block">
             <div id="histogram-chart">
-              <Histogram isLoaded={this.state.isLoaded} />
+              <Histogram isLoaded={this.state.isLoaded} channel={this.state.channel} />
             </div>
             <div className="Histogram-channel">
               <ul>
-                <li><Circle color="all"        id="btn-all"></Circle></li>
-                <li><Circle color="#ddd"       id="btn-grayscale"></Circle></li>
-                <li><Circle color="tomato"     id="btn-red"></Circle></li>
-                <li><Circle color="limegreen"  id="btn-green"></Circle></li>
-                <li><Circle color="dodgerblue" id="btn-blue"></Circle></li>
+                <li><Circle onClick={this.switchChannel.bind(this, "all")} color="all"></Circle></li>
+                <li><Circle onClick={this.switchChannel.bind(this, "grayscale")} color="#ddd"></Circle></li>
+                <li><Circle onClick={this.switchChannel.bind(this, "red")} color="tomato"></Circle></li>
+                <li><Circle onClick={this.switchChannel.bind(this, "green")} color="limegreen"></Circle></li>
+                <li><Circle onClick={this.switchChannel.bind(this, "blue")} color="dodgerblue"></Circle></li>
               </ul>
             </div>
           </div>
