@@ -9,7 +9,10 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {isLoaded: false,
-                  channel: "grayscale"};
+                  channel: "grayscale",
+                  width: 0,
+                  height: 0};
+    this.updateDimensions = this.updateDimensions.bind(this);
   }
 
   handelImageLoaded() {
@@ -18,6 +21,22 @@ class App extends Component {
 
   switchChannel(channel, event) {
     this.setState({channel: channel})
+  }
+
+  updateDimensions() {
+    this.setState({width: window.innerWidth, height: window.innerHeight});
+  }
+
+  componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
+  }
+
+  componentWillMount() {
+    this.updateDimensions();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions);
   }
 
   render() {
