@@ -77,7 +77,6 @@ class D3Chart {
        .attr("stroke", this.color[channel].stroke)
        .attr("fill", this.color[channel].fill)
        .attr("d", area)
-
     }
   }
 }
@@ -86,10 +85,14 @@ class Histogram extends Component {
   constructor(props) {
     super(props);
     this.chart = null;
+    this.counted = false;
   }
 
   componentDidUpdate(prevProps, prevState) {
-    this.countRGB();
+    if (!this.counted) {
+      this.countRGB();
+      this.counted = true;
+    }
     var elem = ReactDOM.findDOMNode(this);
     if (!this.chart) {
       this.chart = new D3Chart(elem, 
