@@ -69,11 +69,16 @@ class D3Chart {
                  .y1(function(d) { return scales.y(d.y)})
     area.y0(scales.y(0));
 
-    g.append("path")
-     .datum(state.data)
-     .attr("stroke", this.color[state.color].stroke)
-     .attr("fill", this.color[state.color].fill)
-     .attr("d", area)
+    for (let idx in state.data_list) {
+      let channel = state.data_list[idx].channel;
+      let data = state.data_list[idx].data;
+      g.append("path")
+       .datum(data)
+       .attr("stroke", this.color[channel].stroke)
+       .attr("fill", this.color[channel].fill)
+       .attr("d", area)
+
+    }
   }
 }
 
@@ -96,14 +101,29 @@ class Histogram extends Component {
   }
 
   getChartState() {
-    var data = [];
-    for (var i = 0; i < this.channel[this.props.channel].length; ++i) {
-      data.push({x: i, y: this.channel[this.props.channel][i]});
+    let converToCoord = (data) => {
+      let ret = [];
+      for (let idx in data) {
+        ret.push({x: idx, y: data[idx]});
+      }
+      return ret;
+    };
+
+    let maxValue = 0, data_list = [];
+    let channel_list = this.props.channel === 'all'
+                     ? ["red", "green", "blue"]
+                     : [this.props.channel];
+
+    for (let idx in channel_list) {
+      let channel = channel_list[idx];
+      data_list.push({channel: channel, 
+                      data: converToCoord(this.channel[channel])});
+      maxValue = Math.max(maxValue, Math.max(...this.channel[channel]));
     }
+
     return {
-      data: data,
-      domain: { x: [0, 255], y: [0, Math.max(...this.channel[this.props.channel])]},
-      color: this.props.channel
+      data_list: data_list,
+      domain: {x: [0, 255], y: [0, maxValue]}
     }
   }
 

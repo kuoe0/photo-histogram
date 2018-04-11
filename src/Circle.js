@@ -30,12 +30,12 @@ class Circle extends Component {
     return (
       <div className="Circle-button">
         <ul className="umbrella">
-          <li className="wheel clipped-color"></li>
-          <li className="wheel clipped-color"></li>
-          <li className="wheel clipped-color"></li>
-          <li className="wheel clipped-color"></li>
-          <li className="wheel clipped-color"></li>
-          <li className="wheel clipped-color"></li>
+          <li className="wheel clipped-color" onClick={this.props.onClick}></li>
+          <li className="wheel clipped-color" onClick={this.props.onClick}></li>
+          <li className="wheel clipped-color" onClick={this.props.onClick}></li>
+          <li className="wheel clipped-color" onClick={this.props.onClick}></li>
+          <li className="wheel clipped-color" onClick={this.props.onClick}></li>
+          <li className="wheel clipped-color" onClick={this.props.onClick}></li>
         </ul>
       </div>
     )
