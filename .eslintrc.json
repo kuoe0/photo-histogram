@@ -1,0 +1,21 @@
+{
+	"extends": [
+		"eslint:recommended",
+		"google",
+		"plugin:react/recommended"
+	],
+	"parserOptions": {
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"jsx": true
+		}
+	},
+	"rules": {
+		"no-console": "off",
+		"max-len": "off"
+	},
+	"env": {
+		"browser": true,
+		"node": true
+	}
+}
