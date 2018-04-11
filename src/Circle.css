@@ -10,6 +10,10 @@
   border-radius: 50%;
 }
 
+.Circle-button:hover {
+  filter: brightness(50%);
+}
+
 .wheel, .wheel::after {
   content: "";
   height: var(--circle-size);
