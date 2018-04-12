@@ -11,6 +11,7 @@
 }
 
 .ChannelButton:hover {
+  cursor: pointer;
   filter: brightness(50%);
 }
 
