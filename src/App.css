@@ -57,21 +57,21 @@
   height: 30vh;
 }
 
-.Histogram-channel {
+.histogram-channel {
   width: 80%;
   margin: 0 auto;
 }
 
-.Histogram-channel > ul {
+.histogram-channel > ul {
   list-style: none;
   padding: 0;
 }
 
-.Histogram-channel ul li {
+.histogram-channel ul li {
   display: inline-block;
   margin-right: 10px;
 }
 
-.Histogram-channel ul li:last-child {
+.histogram-channel ul li:last-child {
   margin-right: 0;
 }

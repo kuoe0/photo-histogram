@@ -88,24 +88,22 @@ class App extends Component {
     return (
       <div className="App">
         <div>
-          <div className="Photo-block">
+          <div id="photo-block">
             <img id="photo"
              src={this.state.imageSrc}
              />
           </div>
-          <div className="Histogram-block">
-            <div id="histogram-chart">
-              <Histogram src={this.state.imageSrc} channel={this.state.channel} />
-            </div>
-            <div className="Histogram-channel">
-              <ul>
-                <li><ChannelButton onClick={() => this.switchChannel('all')} channel="all"></ChannelButton></li>
-                <li><ChannelButton onClick={() => this.switchChannel('grayscale')} channel="grayscale"></ChannelButton></li>
-                <li><ChannelButton onClick={() => this.switchChannel('red')} channel="red"></ChannelButton></li>
-                <li><ChannelButton onClick={() => this.switchChannel('green')} channel="green"></ChannelButton></li>
-                <li><ChannelButton onClick={() => this.switchChannel('blue')} channel="blue"></ChannelButton></li>
-              </ul>
-            </div>
+          <div id="histogram-chart">
+            <Histogram src={this.state.imageSrc} channel={this.state.channel} />
+          </div>
+          <div className="histogram-channel">
+            <ul>
+              <li><ChannelButton onClick={() => this.switchChannel('all')} channel="all"></ChannelButton></li>
+              <li><ChannelButton onClick={() => this.switchChannel('grayscale')} channel="grayscale"></ChannelButton></li>
+              <li><ChannelButton onClick={() => this.switchChannel('red')} channel="red"></ChannelButton></li>
+              <li><ChannelButton onClick={() => this.switchChannel('green')} channel="green"></ChannelButton></li>
+              <li><ChannelButton onClick={() => this.switchChannel('blue')} channel="blue"></ChannelButton></li>
+            </ul>
           </div>
           <div>
             <input id="fileInput" type="file" accept="image/jpeg" style={{display: 'none'}}
