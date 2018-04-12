@@ -147,6 +147,7 @@ class Histogram extends Component {
    * @return {object} state
    */
   getChartState() {
+    // helper function to convert data for D3.js
     let converToCoord = (data) => {
       return data.map((value, idx) => ({x: idx, y: value}));
     };
