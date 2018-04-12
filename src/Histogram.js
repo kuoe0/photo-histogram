@@ -10,10 +10,9 @@ class D3Chart {
   /**
    * Constructor
    * @arg {object} elem target element to draw
-   * @arg {object} props attributes
    * @arg {object} state state
    */
-  constructor(elem, props, state) {
+  constructor(elem, state) {
     this.color = {
       grayscale: {
         stroke: 'rgba(221, 221, 221, 1)',
@@ -36,8 +35,8 @@ class D3Chart {
     this.svg = d3.select(elem)
                 .append('svg')
                 .attr('class', 'd3')
-                .attr('height', props.height)
-                .attr('width', props.width);
+                .attr('height', '100%')
+                .attr('width', '100%');
 
     this.update(elem, state);
   }
@@ -127,19 +126,20 @@ class Histogram extends Component {
    * @arg {object} prevState state
    */
   componentDidUpdate(prevProps, prevState) {
-    const props = this.props;
-    if (this.state.imageSrc != props.src) {
-      this.countRGB();
-      this.setState({imageSrc: props.src});
-    }
-    let elem = ReactDOM.findDOMNode(this);
-    if (!this.chart) {
-      this.chart = new D3Chart(elem,
-                               {height: '100%', width: '100%'},
-                               this.getChartState());
-    } else {
-      this.chart.update(elem, this.getChartState());
-    }
+    setTimeout(() => {
+      const props = this.props;
+      if (this.state.imageSrc !== props.src) {
+        this.countRGB();
+        this.setState({imageSrc: props.src});
+      }
+
+      let elem = ReactDOM.findDOMNode(this);
+      if (!this.chart) {
+        this.chart = new D3Chart(elem, this.getChartState());
+      } else {
+        this.chart.update(elem, this.getChartState());
+      }
+    }, 0);
   }
 
   /**
