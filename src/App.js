@@ -89,7 +89,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">Histogram</h1>
-          <input id="fileInput" type="file" style={{display: 'none'}}
+          <input id="fileInput" type="file" accept="image/jpeg" style={{display: 'none'}}
                  onChange={() => this.loadImage()} />
           <button id="btn-open-image" onClick={() => document.getElementById('fileInput').click()}>
             <FontAwesomeIcon icon={faFolderOpen} />
