@@ -118,7 +118,7 @@ class Histogram extends Component {
   constructor(props) {
     super(props);
     this.chart = null;
-    this.counted = false;
+    this.state = {imageSrc: null};
   }
 
   /**
@@ -127,9 +127,10 @@ class Histogram extends Component {
    * @arg {object} prevState state
    */
   componentDidUpdate(prevProps, prevState) {
-    if (!this.counted) {
+    const props = this.props;
+    if (this.state.imageSrc != props.src) {
       this.countRGB();
-      this.counted = true;
+      this.setState({imageSrc: props.src});
     }
     let elem = ReactDOM.findDOMNode(this);
     if (!this.chart) {

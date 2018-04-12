@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faFolderOpen from '@fortawesome/fontawesome-free-regular/faFolderOpen';
 import Circle from './Circle.js';
 import Histogram from './Histogram.js';
 import demoImg from './resources/demo.jpg';
@@ -17,16 +19,28 @@ class App extends Component {
     super(props);
     this.state = {isLoaded: false,
                   channel: 'grayscale',
+                  imageSrc: demoImg,
                   width: 0,
                   height: 0};
     this.updateDimensions = this.updateDimensions.bind(this);
   }
 
   /**
-   * Notify the image is loaded
+   * Load the new image
    */
-  handelImageLoaded() {
-    this.setState({isLoaded: true});
+  loadImage() {
+    let file = document.querySelector('#fileInput').files[0];
+    console.log('[log] load file: ' + file);
+
+    let reader = new FileReader();
+    reader.addEventListener('load', () => {
+      // update image
+      this.setState({imageSrc: reader.result});
+    }, false);
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   }
 
   /**
@@ -74,18 +88,22 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <h1 className="App-title">Photo Histogram</h1>
+          <h1 className="App-title">Histogram</h1>
+          <input id="fileInput" type="file" style={{display: 'none'}}
+                 onChange={() => this.loadImage()} />
+          <button id="btn-open-image" onClick={() => document.getElementById('fileInput').click()}>
+            <FontAwesomeIcon icon={faFolderOpen} />
+          </button>
         </header>
         <div>
           <div className="Photo-block">
             <img id="photo"
-             src={demoImg}
-             onLoad={() => this.handelImageLoaded()}
+             src={this.state.imageSrc}
              />
           </div>
           <div className="Histogram-block">
             <div id="histogram-chart">
-              <Histogram isLoaded={this.state.isLoaded} channel={this.state.channel} />
+              <Histogram src={this.state.imageSrc} channel={this.state.channel} />
             </div>
             <div className="Histogram-channel">
               <ul>
