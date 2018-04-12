@@ -18,11 +18,23 @@
 }
 
 #btn-open-image {
-  -webkit-appearance: none;
-  background: none;
-  border: none;
-  font-size: 1.5em;
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+  width: 3em;
+  height: 3em;
+
+  font-size: 1em;
   color: white;
+  background: #f50057;
+  border: none;
+  border-radius: 50%;
+  box-shadow: black 0 5px 10px;
+}
+
+#btn-open-image:hover {
+  cursor: pointer;
+  filter: brightness(90%);
 }
 
 #open-button {

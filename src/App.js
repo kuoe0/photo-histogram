@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import faFolderOpen from '@fortawesome/fontawesome-free-regular/faFolderOpen';
+import faImage from '@fortawesome/fontawesome-free-regular/faImage';
 import Circle from './Circle.js';
 import Histogram from './Histogram.js';
 import demoImg from './resources/demo.jpg';
@@ -89,11 +89,6 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">Histogram</h1>
-          <input id="fileInput" type="file" accept="image/jpeg" style={{display: 'none'}}
-                 onChange={() => this.loadImage()} />
-          <button id="btn-open-image" onClick={() => document.getElementById('fileInput').click()}>
-            <FontAwesomeIcon icon={faFolderOpen} />
-          </button>
         </header>
         <div>
           <div className="Photo-block">
@@ -114,6 +109,13 @@ class App extends Component {
                 <li><Circle onClick={() => this.switchChannel('blue')} channel="blue"></Circle></li>
               </ul>
             </div>
+          </div>
+          <div>
+            <input id="fileInput" type="file" accept="image/jpeg" style={{display: 'none'}}
+                   onChange={() => this.loadImage()} />
+            <button id="btn-open-image" onClick={() => document.getElementById('fileInput').click()}>
+              <a><FontAwesomeIcon icon={faImage} /></a>
+            </button>
           </div>
         </div>
       </div>
