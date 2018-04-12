@@ -2,7 +2,7 @@
   --circle-size: 50px;
 }
 
-.Circle-button {
+.ChannelButton {
   overflow: hidden;
   position: relative;
   height: var(--circle-size);
@@ -10,7 +10,7 @@
   border-radius: 50%;
 }
 
-.Circle-button:hover {
+.ChannelButton:hover {
   filter: brightness(50%);
 }
 

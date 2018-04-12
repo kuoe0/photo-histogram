@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faImage from '@fortawesome/fontawesome-free-regular/faImage';
-import Circle from './Circle.js';
+import ChannelButton from './ChannelButton.js';
 import Histogram from './Histogram.js';
 import demoImg from './resources/demo.jpg';
 
@@ -102,11 +102,11 @@ class App extends Component {
             </div>
             <div className="Histogram-channel">
               <ul>
-                <li><Circle onClick={() => this.switchChannel('all')} channel="all"></Circle></li>
-                <li><Circle onClick={() => this.switchChannel('grayscale')} channel="grayscale"></Circle></li>
-                <li><Circle onClick={() => this.switchChannel('red')} channel="red"></Circle></li>
-                <li><Circle onClick={() => this.switchChannel('green')} channel="green"></Circle></li>
-                <li><Circle onClick={() => this.switchChannel('blue')} channel="blue"></Circle></li>
+                <li><ChannelButton onClick={() => this.switchChannel('all')} channel="all"></ChannelButton></li>
+                <li><ChannelButton onClick={() => this.switchChannel('grayscale')} channel="grayscale"></ChannelButton></li>
+                <li><ChannelButton onClick={() => this.switchChannel('red')} channel="red"></ChannelButton></li>
+                <li><ChannelButton onClick={() => this.switchChannel('green')} channel="green"></ChannelButton></li>
+                <li><ChannelButton onClick={() => this.switchChannel('blue')} channel="blue"></ChannelButton></li>
               </ul>
             </div>
           </div>

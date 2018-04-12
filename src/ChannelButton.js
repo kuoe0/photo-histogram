@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 
-import './Circle.css';
+import './ChannelButton.css';
 
 /**
  * Class of d3.js wrapper
  */
-class Circle extends Component {
+class ChannelButton extends Component {
   /**
    * constructor
    * @arg {object} props attributes
@@ -28,7 +28,7 @@ class Circle extends Component {
     const props = this.props;
     if (props.channel !== 'all') {
       return (
-        <div className="Circle-button">
+        <div className="ChannelButton">
           <div className="wheel"
                onClick={props.onClick}
                style={{background: this.color[props.channel]}}></div>
@@ -38,7 +38,7 @@ class Circle extends Component {
 
     // conic-gradient
     return (
-      <div className="Circle-button">
+      <div className="ChannelButton">
         <ul className="umbrella">
           <li className="wheel clipped-color" onClick={props.onClick}></li>
           <li className="wheel clipped-color" onClick={props.onClick}></li>
@@ -52,4 +52,4 @@ class Circle extends Component {
   }
 }
 
-export default Circle;
+export default ChannelButton;
