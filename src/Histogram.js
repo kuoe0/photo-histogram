@@ -118,6 +118,7 @@ class Histogram extends Component {
     super(props);
     this.chart = null;
     this.state = {imageSrc: null};
+    this.maxValue = 0;
   }
 
   /**
@@ -153,7 +154,6 @@ class Histogram extends Component {
     };
 
     const props = this.props;
-    let maxValue = 0;
     let dataList = [];
     let channelList = props.channel === 'all'
                      ? ['red', 'green', 'blue']
@@ -163,12 +163,11 @@ class Histogram extends Component {
       let channel = channelList[idx];
       dataList.push({channel: channel,
                       data: converToCoord(this.channel[channel])});
-      maxValue = Math.max(maxValue, Math.max(...this.channel[channel]));
     }
 
     return {
       data_list: dataList,
-      domain: {x: [0, 255], y: [0, maxValue]},
+      domain: {x: [0, 255], y: [0, this.maxValue]},
     };
   }
 
@@ -183,6 +182,8 @@ class Histogram extends Component {
       'green': new Array(256).fill(0),
       'blue': new Array(256).fill(0),
     };
+    // rest max value
+    this.maxValue = 0;
 
     // read image
     let img = document.getElementById('photo');
@@ -199,6 +200,12 @@ class Histogram extends Component {
         ++this.channel['green'][pixel[1]];
         ++this.channel['blue'][pixel[2]];
         ++this.channel['grayscale'][Math.round(pixel.slice(0, 3).reduce((a, b) => a + b, 0) / 3)];
+      }
+    }
+
+    for (let ch in this.channel) {
+      if (ch in this.channel) {
+      this.maxValue = Math.max(this.maxValue, Math.max(...this.channel[ch]));
       }
     }
   }
