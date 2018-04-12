@@ -189,7 +189,6 @@ class Histogram extends Component {
     canvas.width = img.width;
     canvas.height = img.height;
     canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
-    this.total_pixel = img.width * img.height;
 
     // read each pixel data
     for (let x = 0; x < canvas.width; ++x) {
