@@ -2,6 +2,24 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 
 const d3 = require('d3');
+const chartColor = {
+  grayscale: {
+    stroke: 'rgba(221, 221, 221, 1)',
+    fill: 'rgba(221, 221, 221, .3)',
+  },
+  red: {
+    stroke: 'rgba(255, 99, 71, 1)',
+    fill: 'rgba(255, 99, 71, .3)',
+  },
+  green: {
+    stroke: 'rgba(50, 205, 50, 1)',
+    fill: 'rgba(50, 205, 50, .3)',
+  },
+  blue: {
+    stroke: 'rgba(30, 144, 255, 1)',
+    fill: 'rgba(30, 144, 255, .3)',
+  },
+};
 
 /**
  * Class of d3.js wrapper
@@ -13,25 +31,6 @@ class D3Chart {
    * @arg {object} state state
    */
   constructor(elem, state) {
-    this.color = {
-      grayscale: {
-        stroke: 'rgba(221, 221, 221, 1)',
-        fill: 'rgba(221, 221, 221, .3)',
-      },
-      red: {
-        stroke: 'rgba(255, 99, 71, 1)',
-        fill: 'rgba(255, 99, 71, .3)',
-      },
-      green: {
-        stroke: 'rgba(50, 205, 50, 1)',
-        fill: 'rgba(50, 205, 50, .3)',
-      },
-      blue: {
-        stroke: 'rgba(30, 144, 255, 1)',
-        fill: 'rgba(30, 144, 255, .3)',
-      },
-    };
-
     this.svg = d3.select(elem)
                 .append('svg')
                 .attr('class', 'd3')
@@ -99,8 +98,8 @@ class D3Chart {
       let data = state.data_list[idx].data;
       g.append('path')
        .datum(data)
-       .attr('stroke', this.color[channel].stroke)
-       .attr('fill', this.color[channel].fill)
+       .attr('stroke', chartColor[channel].stroke)
+       .attr('fill', chartColor[channel].fill)
        .attr('d', area);
     }
   }
