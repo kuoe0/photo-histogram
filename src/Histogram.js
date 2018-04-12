@@ -148,11 +148,7 @@ class Histogram extends Component {
    */
   getChartState() {
     let converToCoord = (data) => {
-      let ret = [];
-      for (let idx = 0; idx < data.length; ++idx) {
-        ret.push({x: idx, y: data[idx]});
-      }
-      return ret;
+      return data.map((value, idx) => ({x: idx, y: value}));
     };
 
     const props = this.props;
