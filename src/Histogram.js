@@ -129,7 +129,7 @@ class Histogram extends Component {
     setTimeout(() => {
       const props = this.props;
       if (this.state.imageSrc !== props.src) {
-        this.countRGB();
+        this.getRGBData();
         this.setState({imageSrc: props.src});
       }
 
@@ -173,9 +173,9 @@ class Histogram extends Component {
   }
 
   /**
-   * count all pixel data
+   * get all pixel data of the image
    */
-  countRGB() {
+  getRGBData() {
     // init array for each channel with 0
     this.channel = {
       'grayscale': new Array(256).fill(0),
