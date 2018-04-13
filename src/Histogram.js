@@ -207,6 +207,9 @@ class Histogram extends Component {
       this.maxValue = Math.max(this.maxValue, Math.max(...this.channel[ch]));
       }
     }
+
+    // leave a little space above the max value to make UI more comfortable
+    this.maxValue = Math.round(this.maxValue * 1.05);
   }
 
   /**
