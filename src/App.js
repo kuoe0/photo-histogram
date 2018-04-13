@@ -18,7 +18,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {isLoaded: false,
-                  channel: 'grayscale',
+                  channel: 'all',
                   imageSrc: demoImg,
                   width: 0,
                   height: 0};
