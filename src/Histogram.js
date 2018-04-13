@@ -258,7 +258,9 @@ class Histogram extends Component {
    */
   render() {
     return (
-      <div id="histogram-d3"></div>
+      <div id="histogram-d3">
+        <p id="histogram-placeholder">Histogram</p>
+      </div>
     );
   }
 }
