@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 import * as d3 from 'd3';
 
+import loadingImg from './resources/loading.gif';
+
+import './Histogram.css';
+
 const chartColor = {
   grayscale: {
     stroke: 'rgba(221, 221, 221, 1)',
@@ -117,6 +121,10 @@ class Histogram extends Component {
     this.chart = null;
     this.state = {imageSrc: null};
     this.maxValue = 0;
+    this.root = null;
+    this.loadingImg = document.createElement('img');
+    this.loadingImg.setAttribute('src', loadingImg);
+    this.loadingImg.setAttribute('id', 'loading-img');
   }
 
   /**
@@ -125,20 +133,53 @@ class Histogram extends Component {
    * @arg {object} prevState state
    */
   componentDidUpdate(prevProps, prevState) {
+    const props = this.props;
+    let isImageChanged = this.state.imageSrc !== props.src;
+    isImageChanged && this.toggleLoadingImg(true);
+
     setTimeout(() => {
-      const props = this.props;
-      if (this.state.imageSrc !== props.src) {
+      let elem = this.getRootElement();
+      if (isImageChanged) {
+        this.toggleLoadingImg(false);
         this.getRGBData();
         this.setState({imageSrc: props.src});
-      }
-
-      let elem = document.querySelector('#histogram-d3');
-      if (!this.chart) {
         this.chart = new D3Chart(elem, this.getChartState());
       } else {
+        // only update what channel to show
         this.chart.update(elem, this.getChartState());
       }
     }, 0);
+  }
+
+  /**
+   * get root element of this component
+   * @return {object} return root element of this component
+   */
+  getRootElement() {
+    this.root = this.root || document.querySelector('#histogram-d3');
+    return this.root;
+  }
+
+  /**
+   * clear all elements in the given element
+   * @arg {object} elem given element
+   */
+  emptyElement(elem) {
+    while (elem.firstChild) {
+      elem.removeChild(elem.firstChild);
+    }
+  }
+
+  /**
+   * toggle on/off the loading image
+   * @arg {Boolean} isLoading whether the state is in loading or not
+   */
+  toggleLoadingImg(isLoading) {
+    let elem = this.getRootElement();
+    this.emptyElement(elem);
+    if (isLoading) {
+      elem.appendChild(this.loadingImg);
+    }
   }
 
   /**
@@ -217,7 +258,7 @@ class Histogram extends Component {
    */
   render() {
     return (
-      <div id="histogram-d3" style={{height: '100%', width: '100%'}}></div>
+      <div id="histogram-d3"></div>
     );
   }
 }
