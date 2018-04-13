@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
 import * as d3 from 'd3';
 
 const chartColor = {
@@ -133,7 +132,7 @@ class Histogram extends Component {
         this.setState({imageSrc: props.src});
       }
 
-      let elem = ReactDOM.findDOMNode(this);
+      let elem = document.querySelector('#histogram-d3');
       if (!this.chart) {
         this.chart = new D3Chart(elem, this.getChartState());
       } else {
