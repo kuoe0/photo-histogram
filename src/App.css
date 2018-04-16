@@ -79,7 +79,8 @@
 }
 
 #histogram-chart {
-  border: 1px solid white;
+  border: 1px solid #999;
+  border-radius: 5px;
   margin-left: auto;
   margin-right: auto;
   width: 80%;
