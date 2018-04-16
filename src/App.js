@@ -3,7 +3,6 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faImage from '@fortawesome/fontawesome-free-regular/faImage';
 import ChannelButton from './ChannelButton.js';
 import Histogram from './Histogram.js';
-import demoImg from './resources/demo.jpg';
 
 import './App.css';
 
@@ -19,16 +18,19 @@ class App extends Component {
     super(props);
     this.state = {isLoaded: false,
                   channel: 'all',
-                  imageSrc: demoImg,
+                  imageSrc: null,
                   width: 0,
                   height: 0};
     this.updateDimensions = this.updateDimensions.bind(this);
+    this.photo = document.createElement('img');
+    this.photo.setAttribute('id', 'photo');
   }
 
   /**
    * Load the new image
    */
   loadImage() {
+    this.setState({isLoaded: true});
     let file = document.querySelector('#fileInput').files[0];
     console.log('[log] load file: ' + file);
 
@@ -81,6 +83,28 @@ class App extends Component {
   }
 
   /**
+   * render image placeholder
+   * @return {JSX}
+   */
+  renderPlaceholder() {
+    return (
+      <div id="photo-placeholder">
+        <p>Drop an image here</p>
+      </div>
+    );
+  }
+
+  /**
+   * render image
+   * @return {JSX}
+   */
+  renderPhoto() {
+    return (
+      <img id="photo" src={this.state.imageSrc} />
+    );
+  }
+
+  /**
    * React function to render
    * @return {JSX}
    */
@@ -88,10 +112,8 @@ class App extends Component {
     return (
       <div className="App">
         <div>
-          <div id="photo-block">
-            <img id="photo"
-             src={this.state.imageSrc}
-             />
+          <div id="photo-block" style={this.state.isLoaded ? {border: 'none'} : {border: '#999 solid 1px'}}>
+            {this.state.isLoaded ? this.renderPhoto() : this.renderPlaceholder()}
           </div>
           <div id="histogram-chart">
             <Histogram src={this.state.imageSrc} channel={this.state.channel} />
