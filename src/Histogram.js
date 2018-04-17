@@ -34,12 +34,6 @@ class D3Chart {
    * @arg {object} state state
    */
   constructor(elem, state) {
-    this.svg = d3.select(elem)
-                .append('svg')
-                .attr('class', 'd3')
-                .attr('height', '100%')
-                .attr('width', '100%');
-
     this.update(elem, state);
   }
 
@@ -49,18 +43,8 @@ class D3Chart {
    * @arg {object} state state
    */
   update(elem, state) {
-    this.clear();
     let scales = this._scales(elem, state.domain);
     this._draw(elem, scales, state);
-  }
-
-  /**
-   * Clear result
-   * @arg {object} elem target element to draw
-   * @arg {object} state state
-   */
-  clear() {
-    this.svg.selectAll('*').remove();
   }
 
   /**
@@ -74,8 +58,8 @@ class D3Chart {
       return null;
     }
 
-    let width = elem.offsetWidth;
-    let height = elem.offsetHeight;
+    let width = elem.width.baseVal.value;
+    let height = elem.height.baseVal.value;
     let x = d3.scaleLinear().range([0, width]).domain(domain.x);
     let y = d3.scaleLinear().range([height, 0]).domain(domain.y);
     return {x: x, y: y};
@@ -88,7 +72,7 @@ class D3Chart {
    * @arg {object} state data
    */
   _draw(elem, scales, state) {
-    let g = this.svg.append('g');
+    let g = d3.select(elem).append('g');
     // setup area object
     let area = d3.area()
                  .x((d) => scales.x(d.x))
@@ -118,13 +102,31 @@ class Histogram extends Component {
    */
   constructor(props) {
     super(props);
-    this.chart = null;
-    this.state = {imageSrc: null};
     this.maxValue = 0;
     this.root = null;
-    this.loadingImg = document.createElement('img');
-    this.loadingImg.setAttribute('src', loadingImg);
-    this.loadingImg.setAttribute('id', 'loading-img');
+    this.state = {imageSrc: null,
+                  isDrawn: false,
+                  isLoading: false,
+                  channel: null};
+  }
+
+  /**
+   * React function
+   * @arg {object} nextProps attributes
+   * @arg {object} nextState state
+   * @return {Boolean}
+   */
+  shouldComponentUpdate(nextProps, nextState) {
+    // If histogram is already drawn, we shouldn't
+    // update histogram when the image source and
+    // the channel aren't changed.
+    const {src, channel} = nextProps;
+    if (this.state.isDrawn &&
+        src === this.state.imageSrc &&
+        channel === this.state.channel) {
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -134,51 +136,32 @@ class Histogram extends Component {
    */
   componentDidUpdate(prevProps, prevState) {
     const props = this.props;
-    let isImageChanged = this.state.imageSrc !== props.src;
-    isImageChanged && this.toggleLoadingImg(true);
+    const isImageChanged = this.state.imageSrc !== props.src;
+    const isChannelChanged = this.state.channel !== props.channel;
 
-    setTimeout(() => {
-      let elem = this.getRootElement();
-      if (isImageChanged) {
-        this.toggleLoadingImg(false);
+    if (isImageChanged) {
+      this.setState({imageSrc: props.src, isLoading: true, isDrawn: false, channel: props.channel});
+      // Read RGB data in next event to not block UI rendering.
+      setTimeout(() => {
         this.getRGBData();
-        this.setState({imageSrc: props.src});
-        this.chart = new D3Chart(elem, this.getChartState());
-      } else {
-        // only update what channel to show
-        this.chart.update(elem, this.getChartState());
-      }
-    }, 0);
-  }
-
-  /**
-   * get root element of this component
-   * @return {object} return root element of this component
-   */
-  getRootElement() {
-    this.root = this.root || document.querySelector('#histogram-d3');
-    return this.root;
-  }
-
-  /**
-   * clear all elements in the given element
-   * @arg {object} elem given element
-   */
-  emptyElement(elem) {
-    while (elem.firstChild) {
-      elem.removeChild(elem.firstChild);
+        this.setState({isLoading: false});
+      }, 0);
+      return;
     }
-  }
 
-  /**
-   * toggle on/off the loading image
-   * @arg {Boolean} isLoading whether the state is in loading or not
-   */
-  toggleLoadingImg(isLoading) {
-    let elem = this.getRootElement();
-    this.emptyElement(elem);
-    if (isLoading) {
-      elem.appendChild(this.loadingImg);
+    if (isChannelChanged) {
+      this.setState({isDrawn: false, channel: props.channel});
+      return;
+    }
+
+    if (!this.state.isDrawn && this.state.imageSrc && !this.state.isLoading) {
+      // drawing in next event to make sure svg element
+      // is rendered in a correct size.
+      setTimeout(() => {
+        let elem = document.querySelector('.d3');
+        this.chart = new D3Chart(elem, this.getChartState());
+        this.setState({isDrawn: true});
+      }, 0);
     }
   }
 
@@ -192,11 +175,10 @@ class Histogram extends Component {
       return data.map((value, idx) => ({x: idx, y: value}));
     };
 
-    const props = this.props;
     let dataList = [];
-    let channelList = props.channel === 'all'
+    let channelList = this.state.channel === 'all'
                      ? ['red', 'green', 'blue']
-                     : [props.channel];
+                     : [this.state.channel];
 
     for (let idx = 0; idx < channelList.length; ++idx) {
       let channel = channelList[idx];
@@ -252,6 +234,38 @@ class Histogram extends Component {
     this.maxValue = Math.round(this.maxValue * 1.05);
   }
 
+
+  /**
+   * Render the content inside histogram block.
+   * For initial state, render the text placeholder.
+   * For loading state, render the loading animation.
+   * Otherwise, render svg element as the drawtarget for d3.js.
+   * @return {JSX}
+   */
+  renderContent() {
+    // render initial placeholder
+    const props = this.props;
+    if (props.src === null) {
+      return (
+        <p id="histogram-placeholder">Histogram</p>
+      );
+    }
+
+    if (this.state.isLoading) {
+      // render loading animation
+      return (
+        <img id='loading-img' src={loadingImg} />
+      );
+    }
+
+    // render svg element that is used by d3.js
+    return (
+      <svg className="d3" style={{height: '100%', width: '100%'}}>
+        {this.state.channel}
+      </svg >
+    );
+  }
+
   /**
    * React function to render
    * @return {JSX}
@@ -259,7 +273,7 @@ class Histogram extends Component {
   render() {
     return (
       <div id="histogram-d3">
-        <p id="histogram-placeholder">Histogram</p>
+        {this.renderContent()}
       </div>
     );
   }
