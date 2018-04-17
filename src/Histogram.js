@@ -121,7 +121,7 @@ class Histogram extends Component {
     // update histogram when the image source and
     // the channel aren't changed.
     const {src, channel} = nextProps;
-    if (this.state.isDrawn &&
+    if (nextState.isDrawn &&
         src === this.state.imageSrc &&
         channel === this.state.channel) {
       return false;
@@ -136,33 +136,20 @@ class Histogram extends Component {
    */
   componentDidUpdate(prevProps, prevState) {
     const props = this.props;
+
     const isImageChanged = this.state.imageSrc !== props.src;
-    const isChannelChanged = this.state.channel !== props.channel;
-
     if (isImageChanged) {
-      this.setState({imageSrc: props.src, isLoading: true, isDrawn: false, channel: props.channel});
-      // Read RGB data in next event to not block UI rendering.
-      setTimeout(() => {
-        this.getRGBData();
-        this.setState({isLoading: false});
-      }, 0);
+      this.handleImageChanged(props.src, props.channel);
       return;
     }
 
+    const isChannelChanged = this.state.channel !== props.channel;
     if (isChannelChanged) {
-      this.setState({isDrawn: false, channel: props.channel});
+      this.handleChannelChanged(props.channel);
       return;
     }
 
-    if (!this.state.isDrawn && this.state.imageSrc && !this.state.isLoading) {
-      // drawing in next event to make sure svg element
-      // is rendered in a correct size.
-      setTimeout(() => {
-        let elem = document.querySelector('.d3');
-        this.chart = new D3Chart(elem, this.getChartState());
-        this.setState({isDrawn: true});
-      }, 0);
-    }
+    this.drawHistogram();
   }
 
   /**
@@ -183,7 +170,7 @@ class Histogram extends Component {
     for (let idx = 0; idx < channelList.length; ++idx) {
       let channel = channelList[idx];
       dataList.push({channel: channel,
-                      data: converToCoord(this.channel[channel])});
+                      data: converToCoord(this.channels[channel])});
     }
 
     return {
@@ -193,11 +180,62 @@ class Histogram extends Component {
   }
 
   /**
+   * handle function when the image source is changed
+   * @arg {string} propSrc source
+   * @arg {string} propChannel to show
+   */
+  handleImageChanged(propSrc, propChannel) {
+    this.setState({imageSrc: propSrc,
+                   isLoading: true,
+                   isDrawn: false,
+                   channel: propChannel});
+    // Read RGB data in next event to not block UI rendering.
+    setTimeout(() => {
+      this.getRGBData();
+      this.setState({isLoading: false});
+    }, 0);
+  }
+
+
+  /**
+   * handle function when the channel to show is changed
+   * @arg {string} propChannel to show
+   */
+  handleChannelChanged(propChannel) {
+    this.setState({isDrawn: false, channel: propChannel});
+  }
+
+  /**
+   * handle function when the image source is changed
+   * @arg {string} propChannel to show
+   */
+  drawHistogram() {
+    // Skip to draw in the following states:
+    // 1. The histogram is already drawn.
+    // 2. The image source is null (invalid image source)
+    // 3. RGB data isn't ready to draw histogram
+    if (this.state.isDrawn ||
+        !this.state.imageSrc ||
+        this.state.isLoading) {
+      return;
+    }
+
+    // Drawing in next event to make sure that svg element
+    // is rendered in a correct size.
+    setTimeout(() => {
+      let elem = document.querySelector('.d3');
+      this.chart = new D3Chart(elem, this.getChartState());
+      this.setState({isDrawn: true});
+    }, 0);
+  }
+
+
+  /**
    * get all pixel data of the image
    */
   getRGBData() {
     // init array for each channel with 0
-    this.channel = {
+    this.channels = {
       'grayscale': new Array(256).fill(0),
       'red': new Array(256).fill(0),
       'green': new Array(256).fill(0),
@@ -217,16 +255,16 @@ class Histogram extends Component {
     for (let x = 0; x < canvas.width; ++x) {
       for (let y = 0; y < canvas.height; ++y) {
         const pixel = canvas.getContext('2d').getImageData(x, y, 1, 1).data;
-        ++this.channel['red'][pixel[0]];
-        ++this.channel['green'][pixel[1]];
-        ++this.channel['blue'][pixel[2]];
-        ++this.channel['grayscale'][Math.round(pixel.slice(0, 3).reduce((a, b) => a + b, 0) / 3)];
+        ++this.channels['red'][pixel[0]];
+        ++this.channels['green'][pixel[1]];
+        ++this.channels['blue'][pixel[2]];
+        ++this.channels['grayscale'][Math.round(pixel.slice(0, 3).reduce((a, b) => a + b, 0) / 3)];
       }
     }
 
-    for (let ch in this.channel) {
-      if (ch in this.channel) {
-      this.maxValue = Math.max(this.maxValue, Math.max(...this.channel[ch]));
+    for (let ch in this.channels) {
+      if (this.channels.hasOwnProperty(ch)) {
+        this.maxValue = Math.max(this.maxValue, Math.max(...this.channels[ch]));
       }
     }
 
