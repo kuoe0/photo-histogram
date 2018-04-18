@@ -32,6 +32,8 @@ class App extends Component {
    */
   handleImageDrop(evt) {
     evt.preventDefault();
+    // remove dim filter of the dropzone
+    evt.target.style.filter = '';
     const file = evt.dataTransfer.files[0];
     this.loadImage(file);
   }
@@ -42,6 +44,8 @@ class App extends Component {
    */
   handleImageDropOver(evt) {
     evt.preventDefault();
+    // dim the dropzone
+    evt.target.style.filter = 'brightness(50%)';
   }
 
   /**
