@@ -27,11 +27,38 @@ class App extends Component {
   }
 
   /**
-   * Load the new image
+   * file drop handler
+   * @arg {Event} evt event
    */
-  loadImage() {
-    this.setState({isLoaded: true});
+  handleImageDrop(evt) {
+    evt.preventDefault();
+    const file = evt.dataTransfer.files[0];
+    this.loadImage(file);
+  }
+
+  /**
+   * file drop over handler
+   * @arg {Event} evt event
+   */
+  handleImageDropOver(evt) {
+    evt.preventDefault();
+  }
+
+  /**
+   * image selection handler
+   * @arg {Event} evt event
+   */
+  handleImageSelected(evt) {
     let file = document.querySelector('#fileInput').files[0];
+    this.loadImage(file);
+  }
+
+  /**
+   * Load the new image
+   * @arg {Object} file the image file to load
+   */
+  loadImage(file) {
+    this.setState({isLoaded: true});
     console.log('[log] load file: ' + file);
 
     let reader = new FileReader();
@@ -112,7 +139,10 @@ class App extends Component {
     return (
       <div className="App">
         <div>
-          <div id="photo-block" style={this.state.isLoaded ? {border: 'none'} : {border: '#999 solid 1px'}}>
+          <div id="photo-block"
+               style={this.state.isLoaded ? {border: 'none'} : {border: '#999 solid 1px'}}
+               onDrop={this.handleImageDrop.bind(this)}
+               onDragOver={this.handleImageDropOver.bind(this)}>
             {this.state.isLoaded ? this.renderPhoto() : this.renderPlaceholder()}
           </div>
           <div id="histogram-chart">
@@ -129,7 +159,7 @@ class App extends Component {
           </div>
           <div>
             <input id="fileInput" type="file" accept="image/jpeg" style={{display: 'none'}}
-                   onChange={() => this.loadImage()} />
+                   onChange={this.handleImageSelected.bind(this)} />
             <button id="btn-open-image" onClick={() => document.getElementById('fileInput').click()}>
               <a><FontAwesomeIcon icon={faImage} /></a>
             </button>
