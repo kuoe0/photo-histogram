@@ -22,6 +22,22 @@ const chartColor = {
     stroke: 'rgba(30, 144, 255, 1)',
     fill: 'rgba(30, 144, 255, .3)',
   },
+  yellow: {
+    stroke: 'rgba(255, 215, 0, 1)',
+    fill: 'rgba(255, 215, 0, .3)',
+  },
+  cyan: {
+    stroke: 'rgba(51, 204, 204, 1)',
+    fill: 'rgba(51, 204, 204, .3)',
+  },
+  magenta: {
+    stroke: 'rgba(238, 130, 238, 1)',
+    fill: 'rgba(238, 130, 238, .3)',
+  },
+  white: {
+    stroke: 'rgba(255, 255, 255, 1)',
+    fill: 'rgba(255, 255, 255, .3)',
+  },
 };
 
 /**
@@ -102,8 +118,9 @@ class Histogram extends Component {
    */
   constructor(props) {
     super(props);
+    this.primaryChannels = {};
+    this.secondaryChannels = {};
     this.maxValue = 0;
-    this.root = null;
     this.state = {
       imageSrc: null,
       isDrawn: false,
@@ -165,16 +182,23 @@ class Histogram extends Component {
     };
 
     let dataList = [];
-    let channelList = this.state.channel === 'all'
-                     ? ['red', 'green', 'blue']
-                     : [this.state.channel];
-
-    for (let idx = 0; idx < channelList.length; ++idx) {
-      let channel = channelList[idx];
-      dataList.push({
-        channel: channel,
-        data: converToCoord(this.channels[channel]),
-      });
+    if (this.state.channel === 'all') {
+      // combine all primary channels and all secondary channels
+      let allChannels = Object.assign({}, this.primaryChannels, this.secondaryChannels);
+      for (let ch in allChannels) {
+        if (ch !== 'grayscale' && allChannels.hasOwnProperty(ch)) {
+          dataList.push({
+            channel: ch,
+            data: converToCoord(allChannels[ch]),
+          });
+        }
+      }
+    } else {
+      // single channel
+      dataList = [{
+        channel: this.state.channel,
+        data: converToCoord(this.primaryChannels[this.state.channel]),
+      }];
     }
 
     return {
@@ -239,7 +263,7 @@ class Histogram extends Component {
    */
   getRGBData() {
     // init array for each channel with 0
-    this.channels = {
+    this.primaryChannels = {
       'grayscale': new Array(256).fill(0),
       'red': new Array(256).fill(0),
       'green': new Array(256).fill(0),
@@ -259,21 +283,71 @@ class Histogram extends Component {
     for (let x = 0; x < canvas.width; ++x) {
       for (let y = 0; y < canvas.height; ++y) {
         const pixel = canvas.getContext('2d').getImageData(x, y, 1, 1).data;
-        ++this.channels['red'][pixel[0]];
-        ++this.channels['green'][pixel[1]];
-        ++this.channels['blue'][pixel[2]];
-        ++this.channels['grayscale'][Math.round(pixel.slice(0, 3).reduce((a, b) => a + b, 0) / 3)];
+        ++this.primaryChannels['red'][pixel[0]];
+        ++this.primaryChannels['green'][pixel[1]];
+        ++this.primaryChannels['blue'][pixel[2]];
+        ++this.primaryChannels['grayscale'][Math.round(pixel.slice(0, 3).reduce((a, b) => a + b, 0) / 3)];
       }
     }
 
-    for (let ch in this.channels) {
-      if (this.channels.hasOwnProperty(ch)) {
-        this.maxValue = Math.max(this.maxValue, Math.max(...this.channels[ch]));
+    for (let ch in this.primaryChannels) {
+      if (this.primaryChannels.hasOwnProperty(ch)) {
+        this.maxValue = Math.max(this.maxValue, Math.max(...this.primaryChannels[ch]));
       }
     }
 
     // leave a little space above the max value to make UI more comfortable
     this.maxValue = Math.round(this.maxValue * 1.05);
+
+    // calculate data for secondary colors
+    this.calculateSecondaryChannels();
+  }
+
+  /**
+   * calculate data for secondary color (yellow, cyan, magenta and white)
+   */
+  calculateSecondaryChannels() {
+    // helper function to calculate the value for each secondary channel
+    let getSecondaryColors = (rgb) => {
+      const [r, g, b] = rgb;
+      let [y, c, m, w] = new Array(4).fill(Math.min(r, g, b));
+
+      if (r > b && g > b) {
+        y = Math.min(r, g);
+      }
+
+      if (r > g && b > g) {
+        m = Math.min(r, b);
+      }
+
+      if (g > r && b > r) {
+        c = Math.min(g, b);
+      }
+
+      return {yellow: y, cyan: c, magenta: m, white: w};
+    };
+
+    this.secondaryChannels = {
+      yellow: new Array(256).fill(0),
+      cyan: new Array(256).fill(0),
+      magenta: new Array(256).fill(0),
+      white: new Array(256).fill(0),
+    };
+
+    for (let idx = 0; idx < 256; ++idx) {
+      let rgb = [
+        this.primaryChannels['red'][idx],
+        this.primaryChannels['green'][idx],
+        this.primaryChannels['blue'][idx],
+      ];
+
+      let secondaryColor = getSecondaryColors(rgb);
+      for (let ch in secondaryColor) {
+        if (secondaryColor.hasOwnProperty(ch)) {
+          this.secondaryChannels[ch][idx] = secondaryColor[ch];
+        }
+      }
+    }
   }
 
 
