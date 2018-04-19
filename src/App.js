@@ -63,7 +63,6 @@ class App extends Component {
    */
   loadImage(file) {
     this.setState({isLoaded: true});
-    console.log('[log] load file: ' + file);
 
     let reader = new FileReader();
     reader.addEventListener('load', () => {
