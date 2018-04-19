@@ -104,10 +104,12 @@ class Histogram extends Component {
     super(props);
     this.maxValue = 0;
     this.root = null;
-    this.state = {imageSrc: null,
-                  isDrawn: false,
-                  isLoading: false,
-                  channel: null};
+    this.state = {
+      imageSrc: null,
+      isDrawn: false,
+      isLoading: false,
+      channel: null,
+    };
   }
 
   /**
@@ -169,8 +171,10 @@ class Histogram extends Component {
 
     for (let idx = 0; idx < channelList.length; ++idx) {
       let channel = channelList[idx];
-      dataList.push({channel: channel,
-                      data: converToCoord(this.channels[channel])});
+      dataList.push({
+        channel: channel,
+        data: converToCoord(this.channels[channel]),
+      });
     }
 
     return {
