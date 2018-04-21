@@ -1,112 +1,9 @@
 import React, {Component} from 'react';
-import * as d3 from 'd3';
+import D3Chart from './D3Chart.js';
 
 import loadingImg from './resources/loading.gif';
 
 import './Histogram.css';
-
-const chartColor = {
-  grayscale: {
-    stroke: 'rgba(221, 221, 221, 1)',
-    fill: 'rgba(221, 221, 221, .3)',
-  },
-  red: {
-    stroke: 'rgba(255, 99, 71, 1)',
-    fill: 'rgba(255, 99, 71, .3)',
-  },
-  green: {
-    stroke: 'rgba(50, 205, 50, 1)',
-    fill: 'rgba(50, 205, 50, .3)',
-  },
-  blue: {
-    stroke: 'rgba(30, 144, 255, 1)',
-    fill: 'rgba(30, 144, 255, .3)',
-  },
-  yellow: {
-    stroke: 'rgba(255, 215, 0, 1)',
-    fill: 'rgba(255, 215, 0, .3)',
-  },
-  cyan: {
-    stroke: 'rgba(51, 204, 204, 1)',
-    fill: 'rgba(51, 204, 204, .3)',
-  },
-  magenta: {
-    stroke: 'rgba(238, 130, 238, 1)',
-    fill: 'rgba(238, 130, 238, .3)',
-  },
-  white: {
-    stroke: 'rgba(255, 255, 255, 1)',
-    fill: 'rgba(255, 255, 255, .3)',
-  },
-};
-
-/**
- * Class of d3.js wrapper
- */
-class D3Chart {
-  /**
-   * Constructor
-   * @arg {object} elem target element to draw
-   * @arg {object} state state
-   */
-  constructor(elem, state) {
-    this.update(elem, state);
-  }
-
-  /**
-   * Update result
-   * @arg {object} elem target element to draw
-   * @arg {object} state state
-   */
-  update(elem, state) {
-    let scales = this._scales(elem, state.domain);
-    this._draw(elem, scales, state);
-  }
-
-  /**
-   * Setup scale
-   * @arg {object} elem target element to draw
-   * @arg {object} domain domain
-   * @return {object} scale
-   */
-  _scales(elem, domain) {
-    if (!domain) {
-      return null;
-    }
-
-    let width = elem.width.baseVal.value;
-    let height = elem.height.baseVal.value;
-    let x = d3.scaleLinear().range([0, width]).domain(domain.x);
-    let y = d3.scaleLinear().range([height, 0]).domain(domain.y);
-    return {x: x, y: y};
-  }
-
-  /**
-   * Draw chart
-   * @arg {object} elem target element to draw
-   * @arg {object} scales calculated scale
-   * @arg {object} state data
-   */
-  _draw(elem, scales, state) {
-    let g = d3.select(elem).append('g');
-    // setup area object
-    let area = d3.area()
-                 .x((d) => scales.x(d.x))
-                 .y1((d) => scales.y(d.y));
-    // bottom are always 0
-    area.y0(scales.y(0));
-
-    for (let idx = 0; idx < state.data_list.length; ++idx) {
-      let channel = state.data_list[idx].channel;
-      let data = state.data_list[idx].data;
-      g.append('path')
-       .datum(data)
-       .attr('stroke', chartColor[channel].stroke)
-       .attr('fill', chartColor[channel].fill)
-       .attr('d', area);
-    }
-  }
-}
 
 /**
  * Class of Histogram
@@ -123,29 +20,9 @@ class Histogram extends Component {
     this.maxValue = 0;
     this.state = {
       imageSrc: null,
-      isDrawn: false,
       isLoading: false,
       channel: null,
     };
-  }
-
-  /**
-   * React function
-   * @arg {object} nextProps attributes
-   * @arg {object} nextState state
-   * @return {Boolean}
-   */
-  shouldComponentUpdate(nextProps, nextState) {
-    // If histogram is already drawn, we shouldn't
-    // update histogram when the image source and
-    // the channel aren't changed.
-    const {src, channel} = nextProps;
-    if (nextState.isDrawn &&
-        src === this.state.imageSrc &&
-        channel === this.state.channel) {
-      return false;
-    }
-    return true;
   }
 
   /**
@@ -167,44 +44,44 @@ class Histogram extends Component {
       this.handleChannelChanged(props.channel);
       return;
     }
-
-    this.drawHistogram();
   }
 
   /**
    * get data for chart
    * @return {object} state
    */
-  getChartState() {
+  getDataset() {
     // helper function to convert data for D3.js
     let converToCoord = (data) => {
       return data.map((value, idx) => ({x: idx, y: value}));
     };
 
-    let dataList = [];
-    if (this.state.channel === 'all') {
-      // combine all primary channels and all secondary channels
-      let allChannels = Object.assign({}, this.primaryChannels, this.secondaryChannels);
-      for (let ch in allChannels) {
-        if (ch !== 'grayscale' && allChannels.hasOwnProperty(ch)) {
-          dataList.push({
-            channel: ch,
-            data: converToCoord(allChannels[ch]),
-          });
-        }
-      }
+    let channelList = [];
+
+    if (this.state.channel !== 'all') {
+      channelList = [this.state.channel];
     } else {
-      // single channel
-      dataList = [{
-        channel: this.state.channel,
-        data: converToCoord(this.primaryChannels[this.state.channel]),
-      }];
+      channelList = Object.keys(this.primaryChannels)
+                          .concat(Object.keys(this.secondaryChannels))
+                          .filter((ch) => ch !== 'grayscale');
     }
 
-    return {
-      data_list: dataList,
-      domain: {x: [0, 255], y: [0, this.maxValue]},
-    };
+    return channelList.map((ch) => {
+      return {
+        channel: ch,
+        data: converToCoord(this.primaryChannels.hasOwnProperty(ch)
+                            ? this.primaryChannels[ch]
+                            : this.secondaryChannels[ch]),
+      };
+    });
+  }
+
+  /**
+   * get domain
+   * @return {Object} domain for D3.js
+   */
+  getDomain() {
+      return {x: [0, 255], y: [0, this.maxValue]};
   }
 
   /**
@@ -215,7 +92,6 @@ class Histogram extends Component {
   handleImageChanged(propSrc, propChannel) {
     this.setState({imageSrc: propSrc,
                    isLoading: true,
-                   isDrawn: false,
                    channel: propChannel});
     // Read RGB data in next event to not block UI rendering.
     setTimeout(() => {
@@ -230,33 +106,8 @@ class Histogram extends Component {
    * @arg {string} propChannel to show
    */
   handleChannelChanged(propChannel) {
-    this.setState({isDrawn: false, channel: propChannel});
+    this.setState({channel: propChannel});
   }
-
-  /**
-   * handle function when the image source is changed
-   * @arg {string} propChannel to show
-   */
-  drawHistogram() {
-    // Skip to draw in the following states:
-    // 1. The histogram is already drawn.
-    // 2. The image source is null (invalid image source)
-    // 3. RGB data isn't ready to draw histogram
-    if (this.state.isDrawn ||
-        !this.state.imageSrc ||
-        this.state.isLoading) {
-      return;
-    }
-
-    // Drawing in next event to make sure that svg element
-    // is rendered in a correct size.
-    setTimeout(() => {
-      let elem = document.querySelector('.d3');
-      this.chart = new D3Chart(elem, this.getChartState());
-      this.setState({isDrawn: true});
-    }, 0);
-  }
-
 
   /**
    * get all pixel data of the image
@@ -328,10 +179,10 @@ class Histogram extends Component {
     };
 
     this.secondaryChannels = {
-      yellow: new Array(256).fill(0),
-      cyan: new Array(256).fill(0),
-      magenta: new Array(256).fill(0),
-      white: new Array(256).fill(0),
+      'yellow': new Array(256).fill(0),
+      'cyan': new Array(256).fill(0),
+      'magenta': new Array(256).fill(0),
+      'white': new Array(256).fill(0),
     };
 
     for (let idx = 0; idx < 256; ++idx) {
@@ -376,9 +227,8 @@ class Histogram extends Component {
 
     // render svg element that is used by d3.js
     return (
-      <svg className="d3" style={{height: '100%', width: '100%'}}>
-        {this.state.channel}
-      </svg >
+      <D3Chart domain={this.getDomain()} dataset={this.getDataset()}>
+      </D3Chart>
     );
   }
 

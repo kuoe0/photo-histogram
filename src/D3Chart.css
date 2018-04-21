@@ -1,0 +1,39 @@
+#grayscale-channel {
+    stroke: rgba(221, 221, 221, 1);
+    fill: rgba(221, 221, 221, .3);
+}
+
+#red-channel {
+    stroke: rgba(255, 99, 71, 1);
+    fill: rgba(255, 99, 71, .3);
+}
+
+#green-channel {
+    stroke: rgba(50, 205, 50, 1);
+    fill: rgba(50, 205, 50, .3);
+}
+
+#blue-channel {
+    stroke: rgba(30, 144, 255, 1);
+    fill: rgba(30, 144, 255, .3);
+}
+
+#yellow-channel {
+    stroke: rgba(255, 215, 0, 1);
+    fill: rgba(255, 215, 0, .3);
+}
+
+#cyan-channel {
+    stroke: rgba(51, 204, 204, 1);
+    fill: rgba(51, 204, 204, .3);
+}
+
+#magenta-channel {
+    stroke: rgba(238, 130, 238, 1);
+    fill: rgba(238, 130, 238, .3);
+}
+
+#white-channel {
+    stroke: rgba(255, 255, 255, 1);
+    fill: rgba(255, 255, 255, .3);
+}
