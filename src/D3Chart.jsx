@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import * as d3 from 'd3';
 
 import './D3Chart.css';
@@ -73,7 +73,7 @@ class D3Chart extends Component {
    */
   renderArea() {
     const props = this.props;
-    // Do not render chart when SVG element is not ready or dataset is empty. 
+    // Do not render chart when SVG element is not ready or dataset is empty.
     if (!this.state.isInit || !props.dataset) {
       return;
     }
