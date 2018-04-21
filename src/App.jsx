@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faImage from '@fortawesome/fontawesome-free-regular/faImage';
-import ChannelButton from './ChannelButton.js';
-import Histogram from './Histogram.js';
+import ChannelButton from './ChannelButton';
+import Histogram from './Histogram';
 
 import './App.css';
 

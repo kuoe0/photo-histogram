@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import D3Chart from './D3Chart.js';
+import D3Chart from './D3Chart';
 
 import loadingImg from './resources/loading.gif';
 
