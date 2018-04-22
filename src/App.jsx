@@ -32,8 +32,6 @@ class App extends Component {
    */
   handleImageDrop(evt) {
     evt.preventDefault();
-    // remove dim filter of the dropzone
-    evt.target.style.filter = '';
     const file = evt.dataTransfer.files[0];
     this.loadImage(file);
   }
@@ -42,10 +40,28 @@ class App extends Component {
    * file drop over handler
    * @arg {Event} evt event
    */
-  handleImageDropOver(evt) {
+  handleImageDropEnter(evt) {
     evt.preventDefault();
     // dim the dropzone
     evt.target.style.filter = 'brightness(50%)';
+  }
+
+  /**
+   * file drop over handler
+   * @arg {Event} evt event
+   */
+  handleImageDropLeave(evt) {
+    evt.preventDefault();
+    // dim the dropzone
+    evt.target.style.filter = '';
+  }
+
+  /**
+   * file drop over handler
+   * @arg {Event} evt event
+   */
+  handleImageDropOver(evt) {
+    evt.preventDefault();
   }
 
   /**
@@ -139,7 +155,11 @@ class App extends Component {
     }
     return (
       <img id="photo"
-           src={this.state.imageSrc} />
+           src={this.state.imageSrc}
+           onDrop={this.handleImageDrop.bind(this)}
+           onDragOver={this.handleImageDropOver.bind(this)}
+           onDragEnter={this.handleImageDropEnter.bind(this)}
+           onDragLeave={this.handleImageDropLeave.bind(this)} />
     );
   }
 
@@ -157,7 +177,9 @@ class App extends Component {
                       ? {backgroundImage: 'url(' + this.state.imageSrc + ')'}
                       : {}}
                onDrop={this.handleImageDrop.bind(this)}
-               onDragOver={this.handleImageDropOver.bind(this)}>
+               onDragOver={this.handleImageDropOver.bind(this)}
+               onDragEnter={this.handleImageDropEnter.bind(this)}
+               onDragLeave={this.handleImageDropLeave.bind(this)}>
             {this.renderPlaceholder()}
           </div>
           {this.renderPhoto()}
