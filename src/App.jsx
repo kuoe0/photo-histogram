@@ -117,6 +117,9 @@ class App extends Component {
    * @return {JSX}
    */
   renderPlaceholder() {
+    if (this.state.isLoaded) {
+      return;
+    }
     return (
       <div id="photo-placeholder">
         <p>Drop an image here</p>
@@ -129,8 +132,14 @@ class App extends Component {
    * @return {JSX}
    */
   renderPhoto() {
+    // XXX: Workaround to implement backdrop-filter.
+    // This img is an out-of-flow element (position: absolute).
+    if (!this.state.isLoaded) {
+      return;
+    }
     return (
-      <img id="photo" src={this.state.imageSrc} />
+      <img id="photo"
+           src={this.state.imageSrc} />
     );
   }
 
@@ -143,11 +152,15 @@ class App extends Component {
       <div className="App">
         <div>
           <div id="photo-block"
-               style={this.state.isLoaded ? {border: 'none'} : {border: '#999 solid 1px'}}
+               className={this.state.isLoaded ? 'loaded' : ''}
+               style={this.state.isLoaded
+                      ? {backgroundImage: 'url(' + this.state.imageSrc + ')'}
+                      : {}}
                onDrop={this.handleImageDrop.bind(this)}
                onDragOver={this.handleImageDropOver.bind(this)}>
-            {this.state.isLoaded ? this.renderPhoto() : this.renderPlaceholder()}
+            {this.renderPlaceholder()}
           </div>
+          {this.renderPhoto()}
           <div id="histogram-chart">
             <Histogram src={this.state.imageSrc} channel={this.state.channel} />
           </div>
