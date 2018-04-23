@@ -19,6 +19,7 @@ class App extends Component {
     this.state = {isLoaded: false,
                   channel: 'all',
                   imageSrc: null,
+                  background: '',
                   width: 0,
                   height: 0};
     this.updateDimensions = this.updateDimensions.bind(this);
@@ -58,6 +59,28 @@ class App extends Component {
   }
 
   /**
+   * XXX: workaround for backdrop-filter
+   * Generate blurred background as the background of #photo-block
+   * @arg {String} url the url of photo
+   */
+  generateBlurredBackground(url) {
+    let img = new Image();
+    let canvas = document.createElement('canvas');
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      let ctx = canvas.getContext('2d');
+      ctx.filter = 'blur(10px) brightness(50%)';
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+      this.setState({
+        imageSrc: url,
+        background: 'url(' + canvas.toDataURL() + ')',
+      });
+    };
+    img.setAttribute('src', url);
+  }
+
+  /**
    * Load the new image
    * @arg {Object} file the image file to load
    */
@@ -66,8 +89,7 @@ class App extends Component {
 
     let reader = new FileReader();
     reader.addEventListener('load', () => {
-      // update image
-      this.setState({imageSrc: reader.result});
+      this.generateBlurredBackground(reader.result);
     }, false);
 
     if (file) {
@@ -143,7 +165,7 @@ class App extends Component {
       <div className="App">
         <div>
           <div id="photo-block"
-               style={this.state.isLoaded ? {border: 'none'} : {border: '#999 solid 1px'}}
+               style={this.state.isLoaded ? {backgroundImage: this.state.background} : {padding: '5px', border: '#999 solid 1px'}}
                onDrop={this.handleImageDrop.bind(this)}
                onDragOver={this.handleImageDropOver.bind(this)}>
             {this.state.isLoaded ? this.renderPhoto() : this.renderPlaceholder()}
