@@ -52,6 +52,9 @@
   margin-bottom: 10px;
   max-width: 80%;
   height: 55vh;
+  /* centerize the photo */
+  display: flex;
+  align-items: center;
   /* XXX: workaround for backdrop-filter */
   background-size: cover;
   background-repeat: no-repeat;
