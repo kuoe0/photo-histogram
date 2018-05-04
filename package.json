@@ -2,6 +2,7 @@
   "name": "photo-histogram",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://kuoe0.github.io/photo-histogram",
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.5",
     "@fortawesome/fontawesome-free-regular": "^5.0.10",
@@ -9,6 +10,7 @@
     "d3": "^5.0.0",
     "eslint": "^4.19.1",
     "eslint-plugin-react": "^7.7.0",
+    "gh-pages": "^1.1.0",
     "react": "^16.3.1",
     "react-dom": "^16.3.1",
     "react-scripts": "1.1.4"
@@ -17,7 +19,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+	"predeploy": "yarn build",
+	"deploy": "gh-pages -d build"
   },
   "devDependencies": {
     "eslint-config-google": "^0.9.1",
